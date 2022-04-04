@@ -18,6 +18,7 @@ const LoginPage = () => {
       setStatus(true);
       setmsg(res.data.debug_data);
       setToken(res.data.token);
+      console.log(token)
       console.log(res.data.status);
       if (res.data.status) {
         navigate("/members");

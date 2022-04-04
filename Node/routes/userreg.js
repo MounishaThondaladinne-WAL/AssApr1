@@ -6,4 +6,5 @@ router.post("/", registerController.RegsiterUser);
 router.get("/checkusername/:username", registerController.checkUsername);
 router.get("/checkemail/:email", registerController.checkEmail);
 router.post("/login", registerController.loginUser);
+router.put("/edit/:username", registerController.editUser);
 module.exports = router;

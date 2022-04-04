@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const UserRegister = require("../models/userreg");
 const jwt = require("jsonwebtoken");
+const authentication = require("../middlewares/authentication");
 exports.RegsiterUser = async function (req, res) {
   let { username, email, password, dob } = req.body;
   let userName = await UserRegister.findOne({ username });
@@ -97,3 +98,31 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+exports.editUser = [
+  authentication,
+  (req, res) => {
+    let encryptedPassword;
+    try {
+      let salt = bcrypt.genSaltSync(10);
+      console.log(salt);
+      encryptedPassword = bcrypt.hashSync(req.body.password, salt);
+      console.log(encryptedPassword);
+    } catch (error) {
+      console.log(error);
+      console.log("error in brcypt");
+    }
+    const userOb = UserRegister({
+      username: req.body.username,
+      email: req.body.email,
+      dob: req.body.dob,
+      password: encryptedPassword,
+    });
+    UserRegister.updateOne({ username: req.params.username }, userOb, (err) => {
+      if (err) {
+        res.json({ status: 0, err });
+      } else {
+        res.json({ status: 1, data: "User Edited successfully" });
+      }
+    });
+  },
+];
